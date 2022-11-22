@@ -142,4 +142,8 @@ gradle-app.setting
 # Java heap dump
 *.hprof
 
+### Security ###
+# DB information
+src/main/resources/application-db.yml
+
 # End of https://www.toptal.com/developers/gitignore/api/intellij+all,java,gradle
