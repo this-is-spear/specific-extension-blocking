@@ -1,5 +1,7 @@
 package hello.tis.specificextensionblocking.api.ui;
 
+import hello.tis.specificextensionblocking.api.dto.ExtensionRequest;
+import hello.tis.specificextensionblocking.api.dto.ExtensionResponses;
 import hello.tis.specificextensionblocking.api.service.ExtensionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

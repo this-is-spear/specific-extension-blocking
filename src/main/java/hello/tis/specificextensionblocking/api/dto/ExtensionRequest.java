@@ -1,4 +1,4 @@
-package hello.tis.specificextensionblocking.api.ui;
+package hello.tis.specificextensionblocking.api.dto;
 
 /**
  * 확장자를 추가하기 위한 DTO 입니다.

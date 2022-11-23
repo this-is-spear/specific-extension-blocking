@@ -1,7 +1,7 @@
 package hello.tis.specificextensionblocking.api.service;
 
-import hello.tis.specificextensionblocking.api.ui.ExtensionRequest;
-import hello.tis.specificextensionblocking.api.ui.ExtensionResponses;
+import hello.tis.specificextensionblocking.api.dto.ExtensionRequest;
+import hello.tis.specificextensionblocking.api.dto.ExtensionResponses;
 import org.springframework.stereotype.Service;
 
 /**

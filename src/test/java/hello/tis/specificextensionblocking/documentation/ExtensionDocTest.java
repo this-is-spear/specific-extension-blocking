@@ -6,10 +6,10 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import hello.tis.specificextensionblocking.api.service.ExtensionService;
-import hello.tis.specificextensionblocking.api.ui.CustomExtensionResponse;
+import hello.tis.specificextensionblocking.api.dto.CustomExtensionResponse;
 import hello.tis.specificextensionblocking.api.ui.ExtensionController;
-import hello.tis.specificextensionblocking.api.ui.ExtensionResponses;
-import hello.tis.specificextensionblocking.api.ui.FixedExtensionResponse;
+import hello.tis.specificextensionblocking.api.dto.ExtensionResponses;
+import hello.tis.specificextensionblocking.api.dto.FixedExtensionResponse;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

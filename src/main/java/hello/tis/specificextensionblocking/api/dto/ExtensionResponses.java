@@ -1,4 +1,4 @@
-package hello.tis.specificextensionblocking.api.ui;
+package hello.tis.specificextensionblocking.api.dto;
 
 import java.util.List;
 import lombok.Getter;
