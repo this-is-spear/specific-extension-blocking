@@ -78,7 +78,7 @@ jacocoTestCoverageVerification {
                 minimum = 0.90
             }
 
-            excludes = ["*.SpecificExtensionBlockingApplication", "*.*Request*", "*.*Response*", "*.*Dto*", "*.HelloController"]
+            excludes = ["*.SpecificExtensionBlockingApplication", "*.*Request*", "*.*Response*", "*.*Dto*", "*.HealthController"]
         }
     }
 }
