@@ -1,16 +1,13 @@
 package hello.tis.specificextensionblocking.documentation;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import hello.tis.specificextensionblocking.api.dto.CustomExtensionResponse;
-import hello.tis.specificextensionblocking.api.dto.ExtensionRequest;
 import hello.tis.specificextensionblocking.api.dto.ExtensionResponses;
 import hello.tis.specificextensionblocking.api.dto.FixedExtensionResponse;
 import hello.tis.specificextensionblocking.api.service.ExtensionService;
@@ -107,7 +104,25 @@ class ExtensionDocTest {
   }
 
   @Test
-  void deleteExtension() {
+  void deleteExtension() throws Exception {
+    MockHttpServletRequestBuilder builder = RestDocumentationRequestBuilders
+        .delete("/extensions")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("\"name\":\"yml\"");
+
+    mockMvc.perform(builder)
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(status().isNoContent())
+        .andDo(
+            document(
+                "delete",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                pathParameters()
+            )
+        );
+
+    Mockito.verify(extensionService, atLeastOnce()).clear(any());
 
   }
 
