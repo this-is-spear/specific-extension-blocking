@@ -1,14 +1,30 @@
 package hello.tis.specificextensionblocking.api.service;
 
+import hello.tis.specificextensionblocking.api.domain.ConfiguredExtension;
+import hello.tis.specificextensionblocking.api.domain.ConfiguredExtensionRepository;
+import hello.tis.specificextensionblocking.api.domain.CustomExtension;
+import hello.tis.specificextensionblocking.api.domain.Extension;
+import hello.tis.specificextensionblocking.api.domain.ExtensionRepository;
+import hello.tis.specificextensionblocking.api.domain.FixedExtension;
+import hello.tis.specificextensionblocking.api.dto.CustomExtensionResponse;
+import hello.tis.specificextensionblocking.api.dto.CustomExtensionResponses;
 import hello.tis.specificextensionblocking.api.dto.ExtensionRequest;
 import hello.tis.specificextensionblocking.api.dto.ExtensionResponses;
+import hello.tis.specificextensionblocking.api.dto.FixedExtensionResponse;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 /**
  * 확장자 블로킹 기능 비즈니스 로직을 구현하는 서비스입니다.
  */
 @Service
+@RequiredArgsConstructor
 public class ExtensionService {
+
+  private final ExtensionRepository extensionRepository;
+  private final ConfiguredExtensionRepository configuredExtensionRepository;
 
   /**
    * 고정확장자(FixedExtension)는 확장자 이름(name)과 설정 되어있는지 여부(isChecked)를 포함하고, 커스텀 확장자(CustomExtension)는
@@ -17,7 +33,54 @@ public class ExtensionService {
    * @return 고정확장자와 커스텀확장자 리스트
    */
   public ExtensionResponses findAll() {
-    return null;
+    List<Extension> extensions = extensionRepository.findAll();
+    List<ConfiguredExtension> configuredExtensions = configuredExtensionRepository.findAll();
+
+    List<FixedExtensionResponse> fixedExtensionResponses = getFixedExtensionResponses(
+        extensions, configuredExtensions);
+    List<CustomExtensionResponse> customExtensionResponses = getCustomExtensionResponses(
+        extensions, configuredExtensions);
+
+    return new ExtensionResponses(fixedExtensionResponses,
+        new CustomExtensionResponses(customExtensionResponses));
+  }
+
+  private List<CustomExtensionResponse> getCustomExtensionResponses(List<Extension> extensions,
+      List<ConfiguredExtension> configuredExtensions) {
+    List<CustomExtensionResponse> customExtensionResponses = new ArrayList<>();
+    extensions.parallelStream().forEach(extension -> {
+      if (extension instanceof CustomExtension) {
+        CustomExtension customExtension = (CustomExtension) extension;
+        if (configuredExtensions.stream()
+            .anyMatch(configuredExtension -> configuredExtension
+                .getExtension().getName()
+                .equals(extension.getName()))
+        ) {
+          customExtensionResponses.add(new CustomExtensionResponse(customExtension.getName(),
+              customExtension.getCreatedAt()));
+        }
+      }
+    });
+    return customExtensionResponses;
+  }
+
+  private List<FixedExtensionResponse> getFixedExtensionResponses(List<Extension> extensions,
+      List<ConfiguredExtension> configuredExtensions) {
+    List<FixedExtensionResponse> fixedExtensionResponses = new ArrayList<>();
+    extensions.parallelStream().forEach(extension -> {
+      if (extension instanceof FixedExtension) {
+        FixedExtension fixedExtension = (FixedExtension) extension;
+        fixedExtensionResponses.add(
+            new FixedExtensionResponse(
+                fixedExtension.getName(),
+                configuredExtensions.stream()
+                    .anyMatch(configuredExtension -> configuredExtension.getExtension().getName()
+                        .equals(extension.getName()))
+            )
+        );
+      }
+    });
+    return fixedExtensionResponses;
   }
 
   /**

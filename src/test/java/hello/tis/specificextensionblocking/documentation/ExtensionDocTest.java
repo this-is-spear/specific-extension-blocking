@@ -8,10 +8,12 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import hello.tis.specificextensionblocking.api.dto.CustomExtensionResponse;
+import hello.tis.specificextensionblocking.api.dto.CustomExtensionResponses;
 import hello.tis.specificextensionblocking.api.dto.ExtensionResponses;
 import hello.tis.specificextensionblocking.api.dto.FixedExtensionResponse;
 import hello.tis.specificextensionblocking.api.service.ExtensionService;
 import hello.tis.specificextensionblocking.api.ui.ExtensionController;
+import java.time.LocalDateTime;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -47,8 +49,8 @@ class ExtensionDocTest {
   void findExtension() throws Exception {
     // given
     List<CustomExtensionResponse> customExtensionResponses = List.of(
-        new CustomExtensionResponse("md"),
-        new CustomExtensionResponse("git"));
+        new CustomExtensionResponse("md", LocalDateTime.now()),
+        new CustomExtensionResponse("git", LocalDateTime.now()));
     List<FixedExtensionResponse> fixedExtensionResponses = List.of(
         new FixedExtensionResponse("sh", true),
         new FixedExtensionResponse("bash", true),
@@ -57,7 +59,7 @@ class ExtensionDocTest {
 
     ExtensionResponses value = new ExtensionResponses(
         fixedExtensionResponses,
-        customExtensionResponses
+        new CustomExtensionResponses(customExtensionResponses)
     );
 
     // when

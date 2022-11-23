@@ -29,4 +29,9 @@ public class ConfiguredExtension {
   public ConfiguredExtension(Extension extension) {
     this.extension = extension;
   }
+
+  public ConfiguredExtension(Long id, Extension extension) {
+    this.id = id;
+    this.extension = extension;
+  }
 }

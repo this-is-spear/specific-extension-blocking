@@ -12,5 +12,5 @@ import lombok.RequiredArgsConstructor;
 public class ExtensionResponses {
 
   private final List<FixedExtensionResponse> fixedExtensions;
-  private final List<CustomExtensionResponse> customExtensions;
+  private final CustomExtensionResponses customExtensions;
 }

@@ -15,6 +15,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class FixedExtension extends Extension {
 
+  public FixedExtension(Long id, String name) {
+    super(id, name);
+  }
+
   public FixedExtension(String name) {
     super(name);
   }
