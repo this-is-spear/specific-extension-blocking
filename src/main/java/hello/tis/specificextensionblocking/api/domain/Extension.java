@@ -44,6 +44,7 @@ public abstract class Extension {
     validateNullAndEmpty(name);
     validateSpecialCharacters(name);
     validateOver20(name);
+    name = name.toLowerCase();
 
     this.id = id;
     this.name = name;

@@ -1,5 +1,6 @@
 package hello.tis.specificextensionblocking.api.domain;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -63,5 +64,14 @@ class ExtensionTest {
         () -> assertThatThrownBy(() -> new CustomExtension(영문자만_포함되지_않은_문자))
             .isInstanceOf(ExtensionNameException.class)
     );
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {"ABC", "Avc", "aVc"})
+  @DisplayName("대분자로 들어와도 모두 소문자로 변경되어 저장된다.")
+  void name(String 대문자가_포함된_영문자) {
+    String 소문자로_변경된_영문자 = 대문자가_포함된_영문자.toLowerCase();
+    CustomExtension extension = new CustomExtension(대문자가_포함된_영문자);
+    assertThat(extension.getName()).isEqualTo(소문자로_변경된_영문자);
   }
 }
