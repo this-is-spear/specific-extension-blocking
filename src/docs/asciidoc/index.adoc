@@ -1,0 +1,21 @@
+= Extension Blocking Service
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 2
+:sectlinks:
+
+== Extension
+
+=== Extension 조회
+
+operation::find[snippets='http-request,http-response']
+
+=== Extension 추가
+
+operation::create[snippets='http-request,http-response']
+
+=== Extension 삭제
+
+operation::delete[snippets='http-request,http-response']
