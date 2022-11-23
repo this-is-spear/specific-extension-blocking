@@ -13,4 +13,7 @@ public interface JpaConfiguredExtensionRepository extends JpaRepository<Configur
 
   @Override
   List<ConfiguredExtension> findAll();
+
+  @Override
+  <S extends ConfiguredExtension> S save(S entity);
 }

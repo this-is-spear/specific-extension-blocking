@@ -12,6 +12,7 @@ import hello.tis.specificextensionblocking.api.dto.ExtensionRequest;
 import hello.tis.specificextensionblocking.api.dto.ExtensionResponses;
 import hello.tis.specificextensionblocking.api.dto.FixedExtensionResponse;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -52,7 +53,35 @@ public class ExtensionService {
    * @param extensionRequest 확장명이 포함된 요청 값
    */
   public void add(ExtensionRequest extensionRequest) {
+    List<ConfiguredExtension> configuredExtensions = configuredExtensionRepository.findAll();
+    List<Extension> extensions = extensionRepository.findAll();
 
+    if (configuredExtensions.stream().anyMatch(
+        configuredExtension -> configuredExtension.getExtension().getName()
+            .equals(extensionRequest.getName()))) {
+      throw new AddedExtensionException();
+    }
+
+    if (configuredExtensions.stream().filter(
+            configuredExtension -> configuredExtension.getExtension() instanceof CustomExtension)
+        .count() >= 200) {
+      throw new AddedExtensionException();
+    }
+
+    // 고정 확장자인 경우
+    Optional<Extension> extension = extensions.stream()
+        .filter(ex -> ex instanceof FixedExtension)
+        .filter(ex -> ex.getName().equals(extensionRequest.getName())).findFirst();
+
+    if (extension.isPresent()) {
+      configuredExtensionRepository.save(new ConfiguredExtension(extension.get()));
+      return;
+    }
+
+    // 커스텀 확장자인 경우
+    CustomExtension customExtension = new CustomExtension(extensionRequest.getName());
+    extensionRepository.save(customExtension);
+    configuredExtensionRepository.save(new ConfiguredExtension(customExtension));
   }
 
   /**

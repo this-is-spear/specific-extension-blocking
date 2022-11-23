@@ -7,5 +7,7 @@ import java.util.List;
  */
 public interface ExtensionRepository {
 
+  <S extends Extension> S save(S entity);
+
   List<Extension> findAll();
 }

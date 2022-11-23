@@ -12,5 +12,8 @@ public interface JpaExtensionRepository extends JpaRepository<Extension, Long>,
     ExtensionRepository {
 
   @Override
+  <S extends Extension> S save(S entity);
+
+  @Override
   List<Extension> findAll();
 }

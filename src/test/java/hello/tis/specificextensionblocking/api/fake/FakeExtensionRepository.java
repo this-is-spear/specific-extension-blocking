@@ -16,14 +16,19 @@ public class FakeExtensionRepository implements ExtensionRepository {
 
   private static Long sequence = 0L;
 
-  public void save(CustomExtension extension) {
-    Long id = ++sequence;
-    extensionMap.put(id, new CustomExtension(id, extension.getName(), LocalDateTime.now()));
-  }
-
   public void saveFixed(FixedExtension extension) {
     Long id = ++sequence;
     extensionMap.put(id, new FixedExtension(id, extension.getName()));
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public <S extends Extension> S save(S entity) {
+    Long id = ++sequence;
+    Extension extension = new CustomExtension(id, entity.getName(),
+        LocalDateTime.now());
+    extensionMap.put(id, extension);
+    return (S) extension;
   }
 
   @Override

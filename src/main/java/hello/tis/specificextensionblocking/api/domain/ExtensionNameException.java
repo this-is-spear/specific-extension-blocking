@@ -6,5 +6,6 @@ package hello.tis.specificextensionblocking.api.domain;
 public class ExtensionNameException extends RuntimeException {
 
   public ExtensionNameException() {
+    super();
   }
 }

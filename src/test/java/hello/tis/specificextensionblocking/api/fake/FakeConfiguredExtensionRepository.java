@@ -13,9 +13,13 @@ public class FakeConfiguredExtensionRepository implements ConfiguredExtensionRep
 
   private static Long sequence = 0L;
 
-  public void save(ConfiguredExtension configuredExtension) {
+  @Override
+  @SuppressWarnings("unchecked")
+  public <S extends ConfiguredExtension> S save(S entity) {
     Long id = ++sequence;
-    configuredExtensionMap.put(id, new ConfiguredExtension(id, configuredExtension.getExtension()));
+    ConfiguredExtension extension = new ConfiguredExtension(id, entity.getExtension());
+    configuredExtensionMap.put(id, extension);
+    return (S) extension;
   }
 
   @Override
