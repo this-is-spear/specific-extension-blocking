@@ -1,5 +1,7 @@
 package hello.tis.specificextensionblocking.api.ui;
 
+import hello.tis.specificextensionblocking.api.service.ExtensionService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,7 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("extensions")
+@RequiredArgsConstructor
 public class ExtensionController {
+
+  private final ExtensionService extensionService;
 
   /**
    * 고정 확장자와 커스텀 확장자의 리스트를 반환합니다.
@@ -21,7 +26,7 @@ public class ExtensionController {
    */
   @GetMapping
   public ResponseEntity<ExtensionResponses> findExtensions() {
-    ExtensionResponses extensionResponses = new ExtensionResponses();
+    ExtensionResponses extensionResponses = extensionService.findAll();
     return ResponseEntity.ok(extensionResponses);
   }
 
@@ -33,6 +38,7 @@ public class ExtensionController {
    */
   @PostMapping
   public ResponseEntity<Void> addExtension(ExtensionRequest extensionRequest) {
+    extensionService.add(extensionRequest);
     return ResponseEntity.ok().build();
   }
 
@@ -44,6 +50,7 @@ public class ExtensionController {
    */
   @DeleteMapping
   public ResponseEntity<Void> clearExtension(ExtensionRequest extensionRequest) {
+    extensionService.clear(extensionRequest);
     return ResponseEntity.noContent().build();
   }
 
