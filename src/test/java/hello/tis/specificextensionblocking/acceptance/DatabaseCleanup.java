@@ -15,35 +15,36 @@ import org.springframework.transaction.annotation.Transactional;
 @Profile("test")
 @Service
 public class DatabaseCleanup implements InitializingBean {
-    @Autowired
-    private DataSource dataSource;
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+  @Autowired
+  private DataSource dataSource;
 
-    private List<String> tableNames;
+  @Autowired
+  private JdbcTemplate jdbcTemplate;
 
-    @Override
-    public void afterPropertiesSet() {
-        tableNames = new ArrayList<>();
-        try {
-            DatabaseMetaData metaData = dataSource.getConnection().getMetaData();
-            ResultSet tables = metaData.getTables(null, null, null, new String[]{"TABLE"});
-            while (tables.next()) {
-                String tableName = tables.getString("TABLE_NAME");
-                tableNames.add(tableName);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException();
-        }
+  private List<String> tableNames;
+
+  @Override
+  public void afterPropertiesSet() {
+    tableNames = new ArrayList<>();
+    try {
+      DatabaseMetaData metaData = dataSource.getConnection().getMetaData();
+      ResultSet tables = metaData.getTables(null, null, null, new String[]{"TABLE"});
+      while (tables.next()) {
+        String tableName = tables.getString("TABLE_NAME");
+        tableNames.add(tableName);
+      }
+    } catch (Exception e) {
+      throw new RuntimeException();
     }
+  }
 
-    @Transactional
-    public void execute() {
-        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
-        for (String tableName : tableNames) {
-            jdbcTemplate.execute("TRUNCATE TABLE " + tableName);
-        }
-        jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
+  @Transactional
+  public void execute() {
+    jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY FALSE");
+    for (String tableName : tableNames) {
+      jdbcTemplate.execute("TRUNCATE TABLE " + tableName);
     }
+    jdbcTemplate.execute("SET REFERENTIAL_INTEGRITY TRUE");
+  }
 }

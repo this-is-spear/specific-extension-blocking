@@ -9,5 +9,6 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class CustomExtensionResponse {
+
   private final String name;
 }

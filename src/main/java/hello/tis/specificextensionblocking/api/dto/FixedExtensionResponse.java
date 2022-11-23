@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 @RequiredArgsConstructor
 public class FixedExtensionResponse {
+
   private final String name;
   private final boolean checked;
 }

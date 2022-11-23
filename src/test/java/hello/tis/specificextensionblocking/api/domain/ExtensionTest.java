@@ -16,9 +16,16 @@ class ExtensionTest {
   @DisplayName("타입은 고정(Fixed), 커스텀(Custom) 둘 중 하나의 정보를 가진다.")
   void createExtension() {
     assertAll(
-        () -> assertDoesNotThrow(() -> new FixedExtension("name")),
-        () -> assertDoesNotThrow(() -> new CustomExtension("name"))
+        () -> assertDoesNotThrow(() -> new FixedExtension("sh")),
+        () -> assertDoesNotThrow(() -> new CustomExtension("exe"))
     );
+  }
+
+  @Test
+  @DisplayName("설정된 확장자는 확장자 정보(Extension)를 가진다.")
+  void createConfiguredExtension() {
+    FixedExtension extension = new FixedExtension("sh");
+    assertDoesNotThrow(() -> new ConfiguredExtension(extension));
   }
 
   @ParameterizedTest

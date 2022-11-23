@@ -1,6 +1,7 @@
 package hello.tis.specificextensionblocking.api.domain;
 
 import java.util.regex.Pattern;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,8 +23,10 @@ import lombok.NoArgsConstructor;
 @DiscriminatorColumn
 public abstract class Extension {
 
-  public static final Pattern PATTERN = Pattern.compile("[a-zA-Z]*");
+  private static final Pattern PATTERN = Pattern.compile("[a-zA-Z]*");
+
   @Id
+  @Column(name = "extension_id")
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String name;
