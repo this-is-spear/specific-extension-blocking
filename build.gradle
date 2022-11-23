@@ -3,7 +3,7 @@ plugins {
     id 'jacoco'
     id 'org.springframework.boot' version '2.7.5'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
-    id 'org.asciidoctor.convert' version '1.5.8'
+    id 'org.asciidoctor.jvm.convert' version "3.3.2"
 }
 
 group = 'hello.tis'
@@ -11,6 +11,7 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
+    asciidoctorExtensions
     compileOnly {
         extendsFrom annotationProcessor
     }
@@ -29,6 +30,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    implementation 'org.projectlombok:lombok:1.18.22'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     runtimeOnly 'com.mysql:mysql-connector-j'
@@ -40,6 +43,7 @@ dependencies {
 test {
     useJUnitPlatform()
     finalizedBy 'jacocoTestReport'
+    finalizedBy 'asciidoctor'
 }
 
 jacoco {
@@ -77,17 +81,24 @@ jacocoTestCoverageVerification {
                 minimum = 0.90
             }
 
-            excludes = ["*.SpecificExtensionBlockingApplication", "*.*Request*", "*.*Response*", "*.*Dto*", "*.HelloController"]
+            excludes = ["*.SpecificExtensionBlockingApplication", "*.*Request*", "*.*Response*", "*.*Dto*", "*.HealthController", "*.Configurer", "*.ExtensionService"]
         }
     }
 }
 
-tasks.named('test') {
-    outputs.dir snippetsDir
-    useJUnitPlatform()
+asciidoctor {
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExtensions'
+    dependsOn test
 }
 
-tasks.named('asciidoctor') {
-    inputs.dir snippetsDir
-    dependsOn test
+task copyDocument(type: Copy) {
+    dependsOn asciidoctor
+
+    from file("build/docs/asciidoc")
+    into file("src/main/resources/static/docs")
+}
+
+bootJar {
+    dependsOn copyDocument
 }
