@@ -1,4 +1,4 @@
-package hello.tis.specificextensionblocking;
+package hello.tis.specificextensionblocking.api.ui;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
