@@ -16,3 +16,6 @@ operation::find[snippets='http-request,http-response']
 
 operation::create[snippets='http-request,http-response']
 
+=== Extension 삭제
+
+operation::delete[snippets='http-request,http-response']
