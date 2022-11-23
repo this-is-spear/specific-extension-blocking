@@ -52,7 +52,7 @@ class ExtensionServiceTest {
 
 
   @Test
-  @DisplayName("고정확장자는 확장자명과 설정 되어있는지 여부를 포함하고, 커스텀 확장자는 추가된 순서대로 확장자명만 출력한다.")
+  @DisplayName("고정확장자는 확장자명과 설정 되어있는지 여부를 포함한다.")
   void findAll() {
     assertDoesNotThrow(
         () -> extensionService.findAll()
@@ -60,7 +60,7 @@ class ExtensionServiceTest {
   }
 
   @Test
-  @DisplayName("커스텀 확장자를 추가할 경우 가장 마지막에 배치됩니다.")
+  @DisplayName("커스텀 확장자를 추가할 경우 가장 마지막에 배치된다.")
   void findAll_addCustomExtension() {
     CustomExtension 추가하는_확장자 = new CustomExtension("aab");
     extensionRepository.save(추가하는_확장자);

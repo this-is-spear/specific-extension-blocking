@@ -11,8 +11,8 @@ import hello.tis.specificextensionblocking.api.dto.CustomExtensionResponses;
 import hello.tis.specificextensionblocking.api.dto.ExtensionRequest;
 import hello.tis.specificextensionblocking.api.dto.ExtensionResponses;
 import hello.tis.specificextensionblocking.api.dto.FixedExtensionResponse;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -39,48 +39,10 @@ public class ExtensionService {
     List<FixedExtensionResponse> fixedExtensionResponses = getFixedExtensionResponses(
         extensions, configuredExtensions);
     List<CustomExtensionResponse> customExtensionResponses = getCustomExtensionResponses(
-        extensions, configuredExtensions);
+        extensions);
 
     return new ExtensionResponses(fixedExtensionResponses,
         new CustomExtensionResponses(customExtensionResponses));
-  }
-
-  private List<CustomExtensionResponse> getCustomExtensionResponses(List<Extension> extensions,
-      List<ConfiguredExtension> configuredExtensions) {
-    List<CustomExtensionResponse> customExtensionResponses = new ArrayList<>();
-    extensions.parallelStream().forEach(extension -> {
-      if (extension instanceof CustomExtension) {
-        CustomExtension customExtension = (CustomExtension) extension;
-        if (configuredExtensions.stream()
-            .anyMatch(configuredExtension -> configuredExtension
-                .getExtension().getName()
-                .equals(extension.getName()))
-        ) {
-          customExtensionResponses.add(new CustomExtensionResponse(customExtension.getName(),
-              customExtension.getCreatedAt()));
-        }
-      }
-    });
-    return customExtensionResponses;
-  }
-
-  private List<FixedExtensionResponse> getFixedExtensionResponses(List<Extension> extensions,
-      List<ConfiguredExtension> configuredExtensions) {
-    List<FixedExtensionResponse> fixedExtensionResponses = new ArrayList<>();
-    extensions.parallelStream().forEach(extension -> {
-      if (extension instanceof FixedExtension) {
-        FixedExtension fixedExtension = (FixedExtension) extension;
-        fixedExtensionResponses.add(
-            new FixedExtensionResponse(
-                fixedExtension.getName(),
-                configuredExtensions.stream()
-                    .anyMatch(configuredExtension -> configuredExtension.getExtension().getName()
-                        .equals(extension.getName()))
-            )
-        );
-      }
-    });
-    return fixedExtensionResponses;
   }
 
   /**
@@ -101,5 +63,41 @@ public class ExtensionService {
    */
   public void clear(ExtensionRequest extensionRequest) {
 
+  }
+
+  private List<CustomExtensionResponse> getCustomExtensionResponses(List<Extension> extensions) {
+    return extensions.parallelStream().filter(extension -> extension instanceof CustomExtension)
+        .map(extension -> {
+          CustomExtension customExtension = (CustomExtension) extension;
+          return getCustomExtensionResponse(customExtension);
+        }).collect(Collectors.toList());
+  }
+
+  private List<FixedExtensionResponse> getFixedExtensionResponses(List<Extension> extensions,
+      List<ConfiguredExtension> configuredExtensions) {
+    return extensions.parallelStream().filter(extension -> extension instanceof FixedExtension)
+        .map(extension -> getFixedExtensionResponse(configuredExtensions, extension))
+        .collect(Collectors.toList());
+  }
+
+  private CustomExtensionResponse getCustomExtensionResponse(CustomExtension customExtension) {
+    return new CustomExtensionResponse(customExtension.getName(),
+        customExtension.getCreatedAt());
+  }
+
+  private FixedExtensionResponse getFixedExtensionResponse(
+      List<ConfiguredExtension> configuredExtensions,
+      Extension extension) {
+    return new FixedExtensionResponse(
+        extension.getName(),
+        containsConfiguredExtension(configuredExtensions, extension)
+    );
+  }
+
+  private boolean containsConfiguredExtension(List<ConfiguredExtension> configuredExtensions,
+      Extension extension) {
+    return configuredExtensions.stream()
+        .anyMatch(configuredExtension -> configuredExtension.getExtension().getName()
+            .equals(extension.getName()));
   }
 }
