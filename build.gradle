@@ -41,6 +41,7 @@ dependencies {
 }
 
 test {
+    outputs.dir snippetsDir
     useJUnitPlatform()
     finalizedBy 'jacocoTestReport'
     finalizedBy 'asciidoctor'
@@ -86,17 +87,21 @@ jacocoTestCoverageVerification {
     }
 }
 
+
 asciidoctor {
-    inputs.dir snippetsDir
     configurations 'asciidoctorExtensions'
+    inputs.dir snippetsDir
+    sources {
+        include("**/index.adoc")
+    }
+    baseDirFollowsSourceFile()
     dependsOn test
 }
 
 task copyDocument(type: Copy) {
     dependsOn asciidoctor
-
-    from file("build/docs/asciidoc")
-    into file("src/main/resources/static/docs")
+    from file("${asciidoctor.outputDir}")
+    into file("build/resources/main/static")
 }
 
 bootJar {
