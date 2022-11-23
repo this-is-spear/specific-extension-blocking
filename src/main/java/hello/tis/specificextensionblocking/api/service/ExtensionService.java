@@ -55,34 +55,11 @@ public class ExtensionService {
   public void add(ExtensionRequest extensionRequest) {
     List<ConfiguredExtension> configuredExtensions = configuredExtensionRepository.findAll();
     List<Extension> extensions = extensionRepository.findAll();
-
-    if (configuredExtensions.stream().anyMatch(
-        configuredExtension -> configuredExtension.getExtension().getName()
-            .equals(extensionRequest.getName()))) {
-      throw new AddedExtensionException();
-    }
-
-    if (configuredExtensions.stream().filter(
-            configuredExtension -> configuredExtension.getExtension() instanceof CustomExtension)
-        .count() >= 200) {
-      throw new AddedExtensionException();
-    }
-
-    // 고정 확장자인 경우
-    Optional<Extension> extension = extensions.stream()
-        .filter(ex -> ex instanceof FixedExtension)
-        .filter(ex -> ex.getName().equals(extensionRequest.getName())).findFirst();
-
-    if (extension.isPresent()) {
-      configuredExtensionRepository.save(new ConfiguredExtension(extension.get()));
-      return;
-    }
-
-    // 커스텀 확장자인 경우
-    CustomExtension customExtension = new CustomExtension(extensionRequest.getName());
-    extensionRepository.save(customExtension);
-    configuredExtensionRepository.save(new ConfiguredExtension(customExtension));
+    alreadyConfigured(extensionRequest, configuredExtensions);
+    isOver200(configuredExtensions);
+    saveRepository(extensionRequest, extensions);
   }
+
 
   /**
    * 설정되지 않은 확장자(UncheckedExtension)를 해제할 경우 해제 예외(clearedExtensionException)가 발생하고 커스텀
@@ -128,5 +105,39 @@ public class ExtensionService {
     return configuredExtensions.stream()
         .anyMatch(configuredExtension -> configuredExtension.getExtension().getName()
             .equals(extension.getName()));
+  }
+
+
+  private void alreadyConfigured(ExtensionRequest extensionRequest,
+      List<ConfiguredExtension> configuredExtensions) {
+    if (configuredExtensions.stream().anyMatch(
+        configuredExtension -> configuredExtension.getExtension().getName()
+            .equals(extensionRequest.getName()))) {
+      throw new AddedExtensionException();
+    }
+  }
+
+  private void isOver200(List<ConfiguredExtension> configuredExtensions) {
+    if (configuredExtensions.stream().filter(
+            configuredExtension -> configuredExtension.getExtension() instanceof CustomExtension)
+        .count() >= 200) {
+      throw new AddedExtensionException();
+    }
+  }
+
+  private void saveRepository(ExtensionRequest extensionRequest, List<Extension> extensions) {
+    Optional<Extension> extension = extensions.stream()
+        .filter(ex -> ex instanceof FixedExtension)
+        .filter(ex -> ex.getName().equals(extensionRequest.getName()))
+        .findFirst();
+
+    if (extension.isPresent()) {
+      configuredExtensionRepository.save(new ConfiguredExtension(extension.get()));
+      return;
+    }
+
+    CustomExtension customExtension = new CustomExtension(extensionRequest.getName());
+    extensionRepository.save(customExtension);
+    configuredExtensionRepository.save(new ConfiguredExtension(customExtension));
   }
 }
