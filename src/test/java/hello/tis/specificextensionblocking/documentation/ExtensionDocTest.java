@@ -1,17 +1,23 @@
 package hello.tis.specificextensionblocking.documentation;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.atLeast;
+import static org.mockito.Mockito.atLeastOnce;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import hello.tis.specificextensionblocking.api.service.ExtensionService;
 import hello.tis.specificextensionblocking.api.dto.CustomExtensionResponse;
-import hello.tis.specificextensionblocking.api.ui.ExtensionController;
+import hello.tis.specificextensionblocking.api.dto.ExtensionRequest;
 import hello.tis.specificextensionblocking.api.dto.ExtensionResponses;
 import hello.tis.specificextensionblocking.api.dto.FixedExtensionResponse;
+import hello.tis.specificextensionblocking.api.service.ExtensionService;
+import hello.tis.specificextensionblocking.api.ui.ExtensionController;
 import java.util.List;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -65,7 +71,28 @@ class ExtensionDocTest {
         .get("/extensions")
         .accept(MediaType.APPLICATION_JSON);
 
-    mockMvc.perform(builder).andDo(MockMvcResultHandlers.print())
+    mockMvc.perform(builder)
+        .andDo(MockMvcResultHandlers.print())
+        .andExpect(status().isOk())
+        .andDo(
+            document(
+                "find",
+                getDocumentRequest(),
+                getDocumentResponse(),
+                pathParameters()
+            )
+        );
+  }
+
+  @Test
+  void addExtension() throws Exception {
+    MockHttpServletRequestBuilder builder = RestDocumentationRequestBuilders
+        .post("/extensions")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content("\"name\":\"yml\"");
+
+    mockMvc.perform(builder)
+        .andDo(MockMvcResultHandlers.print())
         .andExpect(status().isOk())
         .andDo(
             document(
@@ -75,11 +102,8 @@ class ExtensionDocTest {
                 pathParameters()
             )
         );
-  }
 
-  @Test
-  void addExtension() {
-
+    Mockito.verify(extensionService, atLeastOnce()).add(any());
   }
 
   @Test

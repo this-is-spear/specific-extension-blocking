@@ -10,5 +10,9 @@
 
 === Extension 조회
 
+operation::find[snippets='http-request,http-response']
+
+=== Extension 추가
+
 operation::create[snippets='http-request,http-response']
 
