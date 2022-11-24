@@ -68,7 +68,17 @@ public class ExtensionService {
    * @param extensionRequest 확장명이 포함된 요청 값
    */
   public void clear(ExtensionRequest extensionRequest) {
+    ConfiguredExtension extension = configuredExtensionRepository.findAll().stream()
+        .filter(
+            configuredExtension -> configuredExtension.getExtension().getName()
+                .equals(extensionRequest.getName())
+        ).findFirst().orElseThrow(ClearedExtensionException::new);
 
+    if (extension.getExtension() instanceof CustomExtension) {
+      extensionRepository.delete(extension.getExtension());
+    }
+
+    configuredExtensionRepository.delete(extension);
   }
 
   private List<CustomExtensionResponse> getCustomExtensionResponses(List<Extension> extensions) {

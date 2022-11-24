@@ -1,5 +1,7 @@
 package hello.tis.specificextensionblocking.api.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import hello.tis.specificextensionblocking.api.domain.ConfiguredExtension;
@@ -11,7 +13,6 @@ import hello.tis.specificextensionblocking.api.dto.ExtensionResponses;
 import hello.tis.specificextensionblocking.api.fake.FakeConfiguredExtensionRepository;
 import hello.tis.specificextensionblocking.api.fake.FakeExtensionRepository;
 import java.util.List;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -78,8 +79,8 @@ class ExtensionServiceTest {
     List<CustomExtensionResponse> customExtensionResponses = responses.getCustomExtensions()
         .getCustomExtensionResponses();
 
-    Assertions.assertThat(
-            customExtensionResponses.get(customExtensionResponses.size() - 1).getName())
+    assertThat(
+        customExtensionResponses.get(customExtensionResponses.size() - 1).getName())
         .isEqualTo(추가하는_확장자.getName());
   }
 
@@ -99,7 +100,7 @@ class ExtensionServiceTest {
   void add_alreadyConfigured(String 확장자_명) {
     ExtensionRequest 이미_설정된_확장자 = new ExtensionRequest(확장자_명);
 
-    Assertions.assertThatThrownBy(
+    assertThatThrownBy(
         () -> extensionService.add(이미_설정된_확장자)
     ).isInstanceOf(AddedExtensionException.class);
   }
@@ -120,9 +121,39 @@ class ExtensionServiceTest {
     }
 
     ExtensionRequest 추가하려는_확장자 = new ExtensionRequest("newexetinsion");
-    Assertions.assertThatThrownBy(
+    assertThatThrownBy(
         () -> extensionService.add(추가하려는_확장자)
     ).isInstanceOf(AddedExtensionException.class);
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {설정되지_않은_고정_확장자, 설정되지_않은_커스텀_확장자})
+  @DisplayName("설정되지 않은 확장자(UncheckedExtension)를 해제할 경우 해제 예외(clearedExtensionException)가 발생한다.")
+  void clear_invalidExtension(String 설정되지_않은_확장자명) {
+    ExtensionRequest 설정되지_않은_확장자 = new ExtensionRequest(설정되지_않은_확장자명);
+    assertThatThrownBy(
+        () -> extensionService.clear(설정되지_않은_확장자)
+    ).isInstanceOf(ClearedExtensionException.class);
+  }
+
+  @Test
+  @DisplayName("커스텀 확장자(CustomExtension)인 경우 삭제한다.")
+  void clear_CustomExtension() {
+    ExtensionRequest 설정된_커스텀_확장자 = new ExtensionRequest(CUSTOM_JAVA.getName());
+
+    extensionService.clear(설정된_커스텀_확장자);
+
+    assertThat(extensionRepository.findAll()).doesNotContain(CUSTOM_JAVA);
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {이미_설정된_고정_확장자, 이미_설정된_커스텀_확장자})
+  @DisplayName("사용자가 설정한 확장자(ConfiguredExtension)를 삭제한다.")
+  void clear(String 설정된_확장자명) {
+    ExtensionRequest 설정된_확장자 = new ExtensionRequest(설정된_확장자명);
+    assertDoesNotThrow(
+        () -> extensionService.clear(설정된_확장자)
+    );
   }
 
   private char getRandomString() {

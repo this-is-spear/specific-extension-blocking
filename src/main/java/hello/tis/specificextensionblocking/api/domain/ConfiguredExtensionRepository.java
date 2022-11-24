@@ -10,4 +10,6 @@ public interface ConfiguredExtensionRepository {
   List<ConfiguredExtension> findAll();
 
   <S extends ConfiguredExtension> S save(S entity);
+
+  void delete(ConfiguredExtension entity);
 }

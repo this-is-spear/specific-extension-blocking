@@ -16,4 +16,7 @@ public interface JpaExtensionRepository extends JpaRepository<Extension, Long>,
 
   @Override
   List<Extension> findAll();
+
+  @Override
+  void delete(Extension entity);
 }

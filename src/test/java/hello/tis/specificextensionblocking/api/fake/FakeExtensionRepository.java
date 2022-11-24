@@ -35,4 +35,9 @@ public class FakeExtensionRepository implements ExtensionRepository {
   public List<Extension> findAll() {
     return new ArrayList<>(extensionMap.values());
   }
+
+  @Override
+  public void delete(Extension entity) {
+    extensionMap.remove(entity.getId());
+  }
 }

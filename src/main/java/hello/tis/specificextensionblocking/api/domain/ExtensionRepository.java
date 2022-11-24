@@ -10,4 +10,7 @@ public interface ExtensionRepository {
   <S extends Extension> S save(S entity);
 
   List<Extension> findAll();
+
+  void delete(Extension entity);
+
 }
