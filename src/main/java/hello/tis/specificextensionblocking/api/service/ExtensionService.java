@@ -11,6 +11,8 @@ import hello.tis.specificextensionblocking.api.dto.CustomExtensionResponses;
 import hello.tis.specificextensionblocking.api.dto.ExtensionRequest;
 import hello.tis.specificextensionblocking.api.dto.ExtensionResponses;
 import hello.tis.specificextensionblocking.api.dto.FixedExtensionResponse;
+import hello.tis.specificextensionblocking.api.exception.AddedExtensionException;
+import hello.tis.specificextensionblocking.api.exception.ClearedExtensionException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;

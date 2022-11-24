@@ -1,6 +1,6 @@
 package hello.tis.specificextensionblocking.api.domain;
 
-import java.util.Objects;
+import hello.tis.specificextensionblocking.api.exception.ExtensionNameException;
 import java.util.regex.Pattern;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
@@ -13,7 +13,6 @@ import javax.persistence.InheritanceType;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.Hibernate;
 
 /**
  * 확장자 엔티티입니다. 확장자명과 확장자 타입을 가집니다.

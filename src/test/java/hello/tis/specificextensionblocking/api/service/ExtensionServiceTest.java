@@ -10,6 +10,8 @@ import hello.tis.specificextensionblocking.api.domain.FixedExtension;
 import hello.tis.specificextensionblocking.api.dto.CustomExtensionResponse;
 import hello.tis.specificextensionblocking.api.dto.ExtensionRequest;
 import hello.tis.specificextensionblocking.api.dto.ExtensionResponses;
+import hello.tis.specificextensionblocking.api.exception.AddedExtensionException;
+import hello.tis.specificextensionblocking.api.exception.ClearedExtensionException;
 import hello.tis.specificextensionblocking.api.fake.FakeConfiguredExtensionRepository;
 import hello.tis.specificextensionblocking.api.fake.FakeExtensionRepository;
 import java.util.List;
