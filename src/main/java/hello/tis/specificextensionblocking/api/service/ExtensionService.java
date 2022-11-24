@@ -16,6 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 확장자 블로킹 기능 비즈니스 로직을 구현하는 서비스입니다.
@@ -33,6 +34,7 @@ public class ExtensionService {
    *
    * @return 고정확장자와 커스텀확장자 리스트
    */
+  @Transactional(readOnly = true)
   public ExtensionResponses findAll() {
     List<Extension> extensions = extensionRepository.findAll();
     List<ConfiguredExtension> configuredExtensions = configuredExtensionRepository.findAll();
@@ -52,6 +54,7 @@ public class ExtensionService {
    *
    * @param extensionRequest 확장명이 포함된 요청 값
    */
+  @Transactional
   public void add(ExtensionRequest extensionRequest) {
     List<ConfiguredExtension> configuredExtensions = configuredExtensionRepository.findAll();
     List<Extension> extensions = extensionRepository.findAll();
@@ -67,6 +70,7 @@ public class ExtensionService {
    *
    * @param extensionRequest 확장명이 포함된 요청 값
    */
+  @Transactional
   public void clear(ExtensionRequest extensionRequest) {
     ConfiguredExtension extension = configuredExtensionRepository.findAll().stream()
         .filter(
