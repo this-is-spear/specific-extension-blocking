@@ -4,10 +4,12 @@ import hello.tis.specificextensionblocking.api.dto.ExtensionRequest;
 import hello.tis.specificextensionblocking.api.dto.ExtensionResponses;
 import hello.tis.specificextensionblocking.api.service.ExtensionService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,7 +28,7 @@ public class ExtensionController {
    *
    * @return 200 OK
    */
-  @GetMapping
+  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<ExtensionResponses> findExtensions() {
     ExtensionResponses extensionResponses = extensionService.findAll();
     return ResponseEntity.ok(extensionResponses);
@@ -38,8 +40,11 @@ public class ExtensionController {
    * @param extensionRequest 확장자의 이름을 입력받습니다.
    * @return 200 OK
    */
-  @PostMapping
-  public ResponseEntity<Void> addExtension(ExtensionRequest extensionRequest) {
+  @PostMapping(
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  public ResponseEntity<Void> addExtension(@RequestBody ExtensionRequest extensionRequest) {
     extensionService.add(extensionRequest);
     return ResponseEntity.ok().build();
   }
@@ -50,8 +55,11 @@ public class ExtensionController {
    * @param extensionRequest 확장자의 이름을 입력받습니다.
    * @return 204 NO_CONTENT
    */
-  @DeleteMapping
-  public ResponseEntity<Void> clearExtension(ExtensionRequest extensionRequest) {
+  @DeleteMapping(
+      consumes = MediaType.APPLICATION_JSON_VALUE,
+      produces = MediaType.APPLICATION_JSON_VALUE
+  )
+  public ResponseEntity<Void> clearExtension(@RequestBody ExtensionRequest extensionRequest) {
     extensionService.clear(extensionRequest);
     return ResponseEntity.noContent().build();
   }
