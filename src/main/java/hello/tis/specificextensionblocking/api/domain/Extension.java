@@ -36,7 +36,7 @@ public abstract class Extension {
   /**
    * 확장자는 이름이 비어있을 수 없습니다. 이름의 길이는 최대 20글자이며, 영문자 외에는 불가능합니다.
    *
-   * @param id 식별자
+   * @param id   식별자
    * @param name 이름
    */
   public Extension(Long id, String name) {

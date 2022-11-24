@@ -3,7 +3,6 @@ package hello.tis.specificextensionblocking.api.infra;
 import hello.tis.specificextensionblocking.api.domain.ConfiguredExtension;
 import hello.tis.specificextensionblocking.api.domain.ConfiguredExtensionRepository;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
