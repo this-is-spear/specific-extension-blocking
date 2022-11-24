@@ -143,9 +143,6 @@ gradle-app.setting
 *.hprof
 
 ### Security ###
-# DB information
-src/main/resources/application-db.yml
-
 ### API Documentation ###
 /src/main/resources/static/docs/*
 
