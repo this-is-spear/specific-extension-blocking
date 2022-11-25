@@ -1,0 +1,23 @@
+.wrapper {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  background: #301e4e;
+}
+
+.input-box {
+  display: flex;
+}
+
+.content {
+  width: 20rem;
+  font-family: system-ui, serif;
+  font-size: 1rem;
+  padding: 2rem;
+  border-radius: 1rem;
+  background: #ff6e6c;
+}
+
+.item {
+  margin: 0.1rem;
+}
