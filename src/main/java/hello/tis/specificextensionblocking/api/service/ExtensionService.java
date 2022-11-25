@@ -75,7 +75,7 @@ public class ExtensionService {
   @Transactional
   public void clear(ExtensionRequest extensionRequest) {
     Extension ex = extensionRepository.findByName(extensionRequest.getName())
-        .orElseThrow(ClearedExtensionException::new);
+        .orElseThrow(ClearedExtensionException::noDataExtension);
 
     if (ex instanceof CustomExtension) {
       extensionRepository.delete(ex);
@@ -85,7 +85,7 @@ public class ExtensionService {
         .filter(
             configuredExtension -> configuredExtension.getExtension().getName()
                 .equals(extensionRequest.getName())
-        ).findFirst().orElseThrow(ClearedExtensionException::new);
+        ).findFirst().orElseThrow(ClearedExtensionException::invalidExtension);
 
     configuredExtensionRepository.delete(extension);
   }
@@ -132,7 +132,7 @@ public class ExtensionService {
     if (configuredExtensions.stream().anyMatch(
         configuredExtension -> configuredExtension.getExtension().getName()
             .equals(extensionRequest.getName()))) {
-      throw new AddedExtensionException();
+      throw AddedExtensionException.alreadyExtension();
     }
   }
 
@@ -140,7 +140,7 @@ public class ExtensionService {
     if (configuredExtensions.stream().filter(
             configuredExtension -> configuredExtension.getExtension() instanceof CustomExtension)
         .count() >= 200) {
-      throw new AddedExtensionException();
+      throw AddedExtensionException.invalidSize();
     }
   }
 

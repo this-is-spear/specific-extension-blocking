@@ -60,19 +60,19 @@ public abstract class Extension {
 
   private void validateOver20(String name) {
     if (name.length() > 20) {
-      throw new ExtensionNameException();
+      throw ExtensionNameException.invalidLength();
     }
   }
 
   private void validateSpecialCharacters(String name) {
     if (!PATTERN.matcher(name).matches()) {
-      throw new ExtensionNameException();
+      throw ExtensionNameException.invalidStrings();
     }
   }
 
   private void validateNullAndEmpty(String name) {
     if (name == null || name.isBlank()) {
-      throw new ExtensionNameException();
+      throw ExtensionNameException.invalidStrings();
     }
   }
 }
