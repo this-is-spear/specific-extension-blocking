@@ -12,7 +12,7 @@ import lombok.ToString;
 public class CustomExtensionResponse implements Comparable<CustomExtensionResponse> {
 
   private final String name;
-  private final transient LocalDateTime createdAt;
+  private final LocalDateTime createdAt;
 
   public CustomExtensionResponse(String name, LocalDateTime createdAt) {
     this.name = name;
