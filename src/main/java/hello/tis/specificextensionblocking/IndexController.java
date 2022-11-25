@@ -22,7 +22,7 @@ public class IndexController {
    * 화면을 제공합니다. 전달되는 값은 고정 확장자 리스트와 커스텀 확장자 리스트입니다.
    *
    * @param model 화면에 전달될 모델입니다.
-   * @return index.html
+   * @return template.html
    * @throws JsonProcessingException 객체를 문자열로 만들지 못할 경우 문제가 발생합니다.
    */
   @GetMapping("index")
@@ -33,6 +33,6 @@ public class IndexController {
     model.addAttribute("fixedExtensions", extensionResponses.getFixedExtensions());
     model.addAttribute("customExtensions",
         extensionResponses.getCustomExtensions().getCustomExtensionResponses());
-    return "index";
+    return "template";
   }
 }

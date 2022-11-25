@@ -6,56 +6,48 @@ function check(n) {
   }
 }
 
-function delete_extension(n) {
-  clear(n.id);
-}
-
 function submit() {
   add($('input[name=name]').val());
 }
 
-function add(name) {
-  let data = {
-    "name": name
-  }
-
-  $.ajax(
-      {
-        url: "/extensions",
-        type: "POST",
-        contentType: 'application/json',
-        data: JSON.stringify(data),
-        success: successCall,
-        error: errorCall()
-      }
-  )
+function delete_extension(n) {
+  clear(n.id);
 }
 
+function add(name) {
+  let data = extracted(name);
+  request_message(data, "POST");
+}
+
+function extracted(name) {
+  return {
+    "name": name
+  };
+}
 
 function clear(name) {
-  console.log(name)
-  let data = {
-    "name": name
-  }
+  let data = extracted(name);
+  request_message(data, "DELETE");
+}
 
+function request_message(data, method) {
   $.ajax(
       {
         url: "/extensions",
-        type: "DELETE",
+        type: method,
         contentType: 'application/json',
         data: JSON.stringify(data),
-        success: successCall,
-        error: errorCall()
+        success: success_call,
+        error: error_call()
       }
   )
 }
 
-function successCall() {
+function success_call() {
   location.reload();
 }
 
-
-function errorCall() {
+function error_call() {
   return request => {
     alert("전송실패 : " + request.responseText);
   };
