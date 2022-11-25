@@ -25,7 +25,7 @@ public class IndexController {
    * @return index.html
    * @throws JsonProcessingException 객체를 문자열로 만들지 못할 경우 문제가 발생합니다.
    */
-  @GetMapping
+  @GetMapping("index")
   public String index(Model model) throws JsonProcessingException {
     ExtensionResponses extensionResponses = extensionService.findAll();
 
