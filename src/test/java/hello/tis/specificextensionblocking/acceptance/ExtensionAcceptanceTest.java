@@ -74,7 +74,7 @@ class ExtensionAcceptanceTest {
     // then
     ResultActions 해제_후_조회 = 조회_요청();
     해제_후_조회.andExpect(content().string(
-            Matchers.containsString("{\"customExtensionResponses\":[]}}")
+            Matchers.containsString("{\"name\":\"" + 고정_확장자 + "\",\"checked\":false}")
         )
     );
   }
@@ -93,7 +93,7 @@ class ExtensionAcceptanceTest {
 
     //then
     ResultActions 추가_후_조회 = 조회_요청();
-    추가_후_조회.andExpect(content().string(Matchers.containsString("\"" + 커스텀_확장자 + "\":\"yml\"")));
+    추가_후_조회.andExpect(content().string(Matchers.containsString("\"name\":\"" + 커스텀_확장자 + "\"")));
 
     // when
     ResultActions 확장자_해제 = 확장자_해제(커스텀_확장자);
@@ -101,7 +101,8 @@ class ExtensionAcceptanceTest {
 
     // then
     ResultActions 해제_후_조회 = 조회_요청();
-    해제_후_조회.andExpect(content().string(Matchers.containsString("\"" + 커스텀_확장자 + "\":\"yml\"")));
+    해제_후_조회.andExpect(
+        content().string(Matchers.containsString("{\"customExtensionResponses\":[]}}")));
   }
 
   /**

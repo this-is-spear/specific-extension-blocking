@@ -3,6 +3,7 @@ package hello.tis.specificextensionblocking.api.infra;
 import hello.tis.specificextensionblocking.api.domain.Extension;
 import hello.tis.specificextensionblocking.api.domain.ExtensionRepository;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -19,4 +20,6 @@ public interface JpaExtensionRepository extends JpaRepository<Extension, Long>,
 
   @Override
   void delete(Extension entity);
+
+  Optional<Extension> findByName(String name);
 }

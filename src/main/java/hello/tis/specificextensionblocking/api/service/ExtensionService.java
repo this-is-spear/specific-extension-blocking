@@ -74,15 +74,18 @@ public class ExtensionService {
    */
   @Transactional
   public void clear(ExtensionRequest extensionRequest) {
+    Extension ex = extensionRepository.findByName(extensionRequest.getName())
+        .orElseThrow(ClearedExtensionException::new);
+
+    if (ex instanceof CustomExtension) {
+      extensionRepository.delete(ex);
+    }
+
     ConfiguredExtension extension = configuredExtensionRepository.findAll().stream()
         .filter(
             configuredExtension -> configuredExtension.getExtension().getName()
                 .equals(extensionRequest.getName())
         ).findFirst().orElseThrow(ClearedExtensionException::new);
-
-    if (extension.getExtension() instanceof CustomExtension) {
-      extensionRepository.delete(extension.getExtension());
-    }
 
     configuredExtensionRepository.delete(extension);
   }

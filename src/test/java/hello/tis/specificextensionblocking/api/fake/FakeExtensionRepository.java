@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class FakeExtensionRepository implements ExtensionRepository {
 
@@ -39,5 +40,12 @@ public class FakeExtensionRepository implements ExtensionRepository {
   @Override
   public void delete(Extension entity) {
     extensionMap.remove(entity.getId());
+  }
+
+  @Override
+  public Optional<Extension> findByName(String name) {
+    return extensionMap.values().stream()
+        .filter(extension -> extension.getName().equals(name))
+        .findFirst();
   }
 }
