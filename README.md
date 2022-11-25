@@ -6,7 +6,17 @@
 
 https://user-images.githubusercontent.com/92219795/203914803-797ff298-b1dd-4e8c-b250-d007260ae7df.mov
 
-자세한 내용은 [화면](http://52.78.120.129/index)에서 해볼 수 있고, [문서](http://52.78.120.129/docs/index.html)도 확인 가능합니다. 
+### 링크
+
+- [화면](http://52.78.120.129/index)
+
+### 이용한 개발 문서
+외적인 구현 방법은 해당 페이지를 클릭해주세요!
+
+- [Rest Docs를 활용한 API 문서화](http://52.78.120.129/docs/index.html)
+- [노션을 활용한 기획 문서화](https://imaspear.notion.site/23b0ac28eee44109a8725e7aa470014e)
+- [이슈를 활용한 개발 문서화](https://github.com/this-is-spear/specific-extension-blocking/issues?q=is%3Aissue+is%3Aclosed)
+- [PR을 활용한 개발 문서화](https://github.com/this-is-spear/specific-extension-blocking/pulls?q=is%3Apr+is%3Aclosed)
 
 ### Skill
 
