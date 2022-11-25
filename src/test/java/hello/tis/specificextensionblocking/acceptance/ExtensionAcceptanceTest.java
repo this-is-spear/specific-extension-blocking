@@ -1,8 +1,11 @@
 package hello.tis.specificextensionblocking.acceptance;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hello.tis.specificextensionblocking.api.DataLoader;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,9 +24,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ExtensionAcceptanceTest {
 
-  private static final String 고정_확장자 = "sh";
+  private static final String 고정_확장자 = "exe";
   private static final String 커스텀_확장자 = "yml";
-  private static final String 설정된_고정_확장자 = "sh";
+  private static final String 설정된_고정_확장자 = "exe";
   private static final String 설정되지_않은_확장자 = "notusedextension";
   private static final String 설정된_커스텀_확장자 = "yml";
 
@@ -36,26 +39,69 @@ class ExtensionAcceptanceTest {
   @Autowired
   private DatabaseCleanup databaseCleanup;
 
+  @Autowired
+  private DataLoader dataLoader;
+
   @BeforeEach
   public void setUp() {
     databaseCleanup.execute();
+    dataLoader.loadData();
   }
 
   /**
-   * @When : 확장자를 설정하면
-   * @Then : 설정된 확장자에 확장자가 추가되고,
-   * @When : 설정된 확장자를 해제하면
-   * @Then : 설정된 확장자에서 삭제된다.
+   * @When : 고정 확장자를 설정하면
+   * @Then : 설정된 고정 확장자에 확장자가 추가되고,
+   * @When : 설정된 고정 확장자를 해제하면
+   * @Then : 설정된 고정 확장자에서 삭제된다.
    */
-  @ParameterizedTest
-  @ValueSource(strings = {고정_확장자, 커스텀_확장자})
-  void test1(String 확장자) throws Exception {
-    // when & then
-    ResultActions 확장자_추가 = 확장자_추가(확장자);
+  @Test
+  void test1() throws Exception {
+    // when
+    ResultActions 확장자_추가 = 확장자_추가(고정_확장자);
     확장자_추가.andExpect(status().isOk());
-    // when & then
-    ResultActions 확장자_해제 = 확장자_해제(확장자);
+
+    //then
+    ResultActions 추가_후_조회 = 조회_요청();
+    추가_후_조회.andExpect(content().string(
+            Matchers.containsString("{\"name\":\"" + 고정_확장자 + "\",\"checked\":true}")
+        )
+    );
+
+    // when
+    ResultActions 확장자_해제 = 확장자_해제(고정_확장자);
     확장자_해제.andExpect(status().isNoContent());
+
+    // then
+    ResultActions 해제_후_조회 = 조회_요청();
+    해제_후_조회.andExpect(content().string(
+            Matchers.containsString("{\"customExtensionResponses\":[]}}")
+        )
+    );
+  }
+
+  /**
+   * @When : 커스텀 확장자를 설정하면
+   * @Then : 설정된 커스텀 확장자에 확장자가 추가되고,
+   * @When : 설정된 커스텀 확장자를 해제하면
+   * @Then : 설정된 커스텀 확장자에서 삭제된다.
+   */
+  @Test
+  void test4() throws Exception {
+    // when
+    ResultActions 확장자_추가 = 확장자_추가(커스텀_확장자);
+    확장자_추가.andExpect(status().isOk());
+
+    //then
+    ResultActions 추가_후_조회 = 조회_요청();
+    추가_후_조회.andExpect(content().string(Matchers.containsString("\"" + 커스텀_확장자 + "\":\"yml\"")));
+
+    // when
+    ResultActions 확장자_해제 = 확장자_해제(커스텀_확장자);
+    확장자_해제.andExpect(status().isNoContent());
+
+    // then
+    ResultActions 해제_후_조회 = 조회_요청();
+    해제_후_조회.andExpect(content().string(Matchers.containsString("\"" + 커스텀_확장자 + "\":\"yml\"")));
   }
 
   /**
@@ -90,11 +136,10 @@ class ExtensionAcceptanceTest {
   }
 
 
-  private ResultActions 조회_요청(String extension) throws Exception {
+  private ResultActions 조회_요청() throws Exception {
     return mockMvc.perform(
         MockMvcRequestBuilders.get("/extensions")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content("\"name\":\"" + extension + "\"")
+            .accept(MediaType.APPLICATION_JSON)
     ).andExpect(status().isOk());
   }
 
@@ -102,7 +147,7 @@ class ExtensionAcceptanceTest {
     return mockMvc.perform(
         MockMvcRequestBuilders.post("/extensions")
             .contentType(MediaType.APPLICATION_JSON)
-            .content("\"name\":\"" + extension + '\"')
+            .content("{\"name\":\"" + extension + "\"}")
     );
   }
 
@@ -110,7 +155,7 @@ class ExtensionAcceptanceTest {
     return mockMvc.perform(
         MockMvcRequestBuilders.delete("/extensions")
             .contentType(MediaType.APPLICATION_JSON)
-            .content("\"name\":\"" + extension + "\"")
+            .content("{\"name\":\"" + extension + "\"}")
     );
   }
 
