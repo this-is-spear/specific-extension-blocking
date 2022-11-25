@@ -26,10 +26,11 @@ function add(name) {
         contentType: 'application/json',
         data: JSON.stringify(data),
         success: successCall,
-        error: errorCall
+        error: errorCall()
       }
   )
 }
+
 
 function clear(name) {
   console.log(name)
@@ -44,16 +45,18 @@ function clear(name) {
         contentType: 'application/json',
         data: JSON.stringify(data),
         success: successCall,
-        error: errorCall
+        error: errorCall()
       }
   )
 }
 
 function successCall() {
-  alert("전송성공");
   location.reload();
 }
 
+
 function errorCall() {
-  alert("전송실패");
+  return request => {
+    alert("전송실패 : " + request.responseText);
+  };
 }
