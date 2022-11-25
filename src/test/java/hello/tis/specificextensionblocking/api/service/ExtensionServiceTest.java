@@ -128,6 +128,16 @@ class ExtensionServiceTest {
     ).isInstanceOf(AddedExtensionException.class);
   }
 
+  @Test
+  @DisplayName("저장되어 있지 않은 확장자를 해제할 경우 해제 예외(clearedExtensionException)가 발생한다.")
+  void clear_NoData() {
+    String 존재하지_않은_확장자_명 = "nodataextensionname";
+    ExtensionRequest 존재하지_않은_확장자 = new ExtensionRequest(존재하지_않은_확장자_명);
+    assertThatThrownBy(
+        () -> extensionService.clear(존재하지_않은_확장자)
+    ).isInstanceOf(ClearedExtensionException.class);
+  }
+
   @ParameterizedTest
   @ValueSource(strings = {설정되지_않은_고정_확장자, 설정되지_않은_커스텀_확장자})
   @DisplayName("설정되지 않은 확장자(UncheckedExtension)를 해제할 경우 해제 예외(clearedExtensionException)가 발생한다.")
